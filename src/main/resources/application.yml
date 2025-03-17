@@ -1,0 +1,22 @@
+myapp:
+  test-message: "application.yml found!"
+server:
+  port: 8080
+spring:
+  application:
+    name: tsk_insider_backend
+  datasource:
+    url: jdbc:postgresql://localhost:5432/tsk_insider
+    username: postgres
+    password: password
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    properties:
+      hibernate.format_sql: true
+  liquibase:
+    enabled: true
+    change-log: classpath:/db/changelog/db.changelog-master.yaml

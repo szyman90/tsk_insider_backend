@@ -1,0 +1,101 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: szyman90
+      changes:
+        - createTable:
+            tableName: vet
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: address
+                  type: TEXT
+
+  - changeSet:
+      id: 2
+      author: szyman90
+      changes:
+        - createTable:
+            tableName: cat
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: age
+                  type: INTEGER
+              - column:
+                  name: weight
+                  type: DOUBLE
+              - column:
+                  name: cage_number
+                  type: INTEGER
+              - column:
+                  name: character
+                  type: TEXT
+              - column:
+                  name: tameness
+                  type: VARCHAR(50)
+              - column:
+                  name: is_vaccinated
+                  type: BOOLEAN
+              - column:
+                  name: is_neutered
+                  type: BOOLEAN
+              - column:
+                  name: gender
+                  type: VARCHAR(10)
+              - column:
+                  name: vet_id
+                  type: UUID
+                  constraints:
+                    foreignKeyName: fk_cat_vet
+                    references: vet(id)
+
+  - changeSet:
+      id: 3
+      author: szyman90
+      changes:
+        - createTable:
+            tableName: cat_tests
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: cat_id
+                  type: UUID
+                  constraints:
+                    foreignKeyName: fk_cat_tests_cat
+                    references: cat(id)
+              - column:
+                  name: test_type
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: result
+                  type: VARCHAR(20)
+                  constraints:
+                    nullable: false
