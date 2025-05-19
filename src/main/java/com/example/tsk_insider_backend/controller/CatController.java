@@ -1,5 +1,6 @@
 package com.example.tsk_insider_backend.controller;
 
+import java.net.URI;
 import java.util.List;
 import java.util.UUID;
 
@@ -14,7 +15,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.example.tsk_insider_backend.dto.CatCreateDTO;
+import com.example.tsk_insider_backend.dto.CatReadDTO;
 import com.example.tsk_insider_backend.entity.Cat;
 import com.example.tsk_insider_backend.service.CatService;
 
@@ -34,21 +38,33 @@ public class CatController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Cat> getCatById(@PathVariable UUID id) {
+    public ResponseEntity<CatReadDTO> getCatById(@PathVariable UUID id) {
         return catService.getCatById(id)
+                .map(CatReadDTO::from)
                 .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .orElse(ResponseEntity.notFound()
+                        .build());
     }
 
     @GetMapping("/burrow")
-    public ResponseEntity<List<Cat>> getCatsInBurrow() {
-        return ResponseEntity.ok(catService.getCatsInBurrow());
+    public ResponseEntity<List<CatReadDTO>> getCatsInBurrow() {
+        return ResponseEntity.ok(catService.getCatsInBurrow()
+                .stream()
+                .map(CatReadDTO::from)
+                .toList());
     }
 
     @PreAuthorize("hasAnyRole('BURROW_KEEPER', 'MANAGEMENT', 'ADMIN')")
     @PostMapping
-    public ResponseEntity<Cat> addCat(@RequestBody Cat cat, Authentication authentication) {
-        return ResponseEntity.ok(catService.addCat(cat, authentication));
+    public ResponseEntity<CatReadDTO> createCat(@RequestBody CatCreateDTO catDTO, Authentication authentication) {
+        Cat cat = catService.addCat(catDTO, authentication);
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(cat.getId())
+                .toUri();
+
+        return ResponseEntity.created(location)
+                .body(CatReadDTO.from(cat));
     }
 
     @PreAuthorize("hasAnyRole('BURROW_KEEPER', 'MANAGEMENT', 'ADMIN')")
@@ -61,6 +77,7 @@ public class CatController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCat(@PathVariable UUID id, Authentication authentication) {
         catService.deleteCat(id, authentication);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.noContent()
+                .build();
     }
 }

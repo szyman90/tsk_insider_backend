@@ -8,6 +8,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import com.example.tsk_insider_backend.dto.CatCreateDTO;
 import com.example.tsk_insider_backend.entity.Cat;
 import com.example.tsk_insider_backend.respository.CatRepository;
 
@@ -33,11 +34,11 @@ public class CatService {
         return catRepository.findByCageNumberIsNotNull();
     }
 
-    public Cat addCat(Cat cat, Authentication authentication) {
-        if (isBurrowKeeper(authentication) && cat.getCageNumber() == null) {
+    public Cat addCat(CatCreateDTO catDTO, Authentication authentication) {
+        if (isBurrowKeeper(authentication) && catDTO.cageNumber() == null) {
             throw new AccessDeniedException("BURROW_KEEPER może dodawać tylko koty do nory!");
         }
-        return catRepository.save(cat);
+        return catRepository.save(createDTOtoEntity(catDTO));
     }
 
     public Cat updateCat(UUID id, Cat updatedCat, Authentication authentication) {
@@ -75,5 +76,19 @@ public class CatService {
     private boolean isBurrowKeeper(Authentication authentication) {
         return authentication.getAuthorities().stream()
                 .anyMatch(auth -> auth.getAuthority().equals("ROLE_BURROW_KEEPER"));
+    }
+
+    private Cat createDTOtoEntity(CatCreateDTO catDTO) {
+        Cat cat = new Cat();
+        cat.setName(catDTO.name());
+        cat.setAge(catDTO.age());
+        cat.setTameness(catDTO.tameness());
+        cat.setCageNumber(catDTO.cageNumber());
+        cat.setGender(catDTO.gender());
+        cat.setVaccinated(catDTO.isVaccinated());
+        cat.setNeutered(catDTO.isNeutered());
+        cat.setWeight(catDTO.weight());
+        cat.setVet(catDTO.vet());
+        return cat;
     }
 }
