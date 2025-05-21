@@ -9,6 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import com.example.tsk_insider_backend.dto.CatCreateDTO;
+import com.example.tsk_insider_backend.dto.CatUpdateDTO;
 import com.example.tsk_insider_backend.entity.Cat;
 import com.example.tsk_insider_backend.respository.CatRepository;
 
@@ -34,14 +35,15 @@ public class CatService {
         return catRepository.findByCageNumberIsNotNull();
     }
 
-    public Cat addCat(CatCreateDTO catDTO, Authentication authentication) {
+    public Cat createCat(CatCreateDTO catDTO, Authentication authentication) {
         if (isBurrowKeeper(authentication) && catDTO.cageNumber() == null) {
             throw new AccessDeniedException("BURROW_KEEPER może dodawać tylko koty do nory!");
         }
-        return catRepository.save(createDTOtoEntity(catDTO));
+        Cat dtOtoEntity = createDTOtoEntity(catDTO);
+        return catRepository.save(dtOtoEntity);
     }
 
-    public Cat updateCat(UUID id, Cat updatedCat, Authentication authentication) {
+    public void updateCat(UUID id, CatUpdateDTO updatedCat, Authentication authentication) {
         Cat existingCat = catRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Cat not found"));
 
@@ -49,24 +51,24 @@ public class CatService {
             throw new AccessDeniedException("BURROW_KEEPER może edytować tylko koty w norze!");
         }
 
-        existingCat.setName(updatedCat.getName());
-        existingCat.setAge(updatedCat.getAge());
-        existingCat.setWeight(updatedCat.getWeight());
-        existingCat.setCageNumber(updatedCat.getCageNumber());
-        existingCat.setTameness(updatedCat.getTameness());
+        existingCat.setName(updatedCat.name());
+        existingCat.setAge(updatedCat.age());
+        existingCat.setWeight(updatedCat.weight());
+        existingCat.setCageNumber(updatedCat.cageNumber());
+        existingCat.setTameness(updatedCat.tameness());
         existingCat.setVaccinated(updatedCat.isVaccinated());
         existingCat.setNeutered(updatedCat.isNeutered());
-        existingCat.setGender(updatedCat.getGender());
-        existingCat.setVet(updatedCat.getVet());
+        existingCat.setGender(updatedCat.gender());
+        existingCat.setVet(updatedCat.vet());
 
-        return catRepository.save(existingCat);
+        catRepository.save(existingCat);
     }
 
     public void deleteCat(UUID id, Authentication authentication) {
         Cat cat = catRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Cat not found"));
 
-        if (isBurrowKeeper(authentication) && cat.getCageNumber() == null) {
+        if (isBurrowKeeper(authentication) && cat.getCageNumber() == null) { //TODO przed resztą zablokuj
             throw new AccessDeniedException("BURROW_KEEPER może usuwać tylko koty w norze!");
         }
 

@@ -19,8 +19,11 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.example.tsk_insider_backend.dto.CatCreateDTO;
 import com.example.tsk_insider_backend.dto.CatReadDTO;
+import com.example.tsk_insider_backend.dto.CatUpdateDTO;
 import com.example.tsk_insider_backend.entity.Cat;
 import com.example.tsk_insider_backend.service.CatService;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/cats")
@@ -57,7 +60,7 @@ public class CatController {
     @PreAuthorize("hasAnyRole('BURROW_KEEPER', 'MANAGEMENT', 'ADMIN')")
     @PostMapping
     public ResponseEntity<CatReadDTO> createCat(@RequestBody CatCreateDTO catDTO, Authentication authentication) {
-        Cat cat = catService.addCat(catDTO, authentication);
+        Cat cat = catService.createCat(catDTO, authentication);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
                 .buildAndExpand(cat.getId())
@@ -69,8 +72,9 @@ public class CatController {
 
     @PreAuthorize("hasAnyRole('BURROW_KEEPER', 'MANAGEMENT', 'ADMIN')")
     @PutMapping("/{id}")
-    public ResponseEntity<Cat> updateCat(@PathVariable UUID id, @RequestBody Cat cat, Authentication authentication) {
-        return ResponseEntity.ok(catService.updateCat(id, cat, authentication));
+    public ResponseEntity<Cat> updateCat(@PathVariable UUID id, @RequestBody @Valid CatUpdateDTO cat, Authentication authentication) {
+        catService.updateCat(id, cat, authentication);
+        return ResponseEntity.noContent().build();
     }
 
     @PreAuthorize("hasAnyRole('BURROW_KEEPER', 'MANAGEMENT', 'ADMIN')")
