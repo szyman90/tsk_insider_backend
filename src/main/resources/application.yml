@@ -24,3 +24,5 @@ spring:
     user:
       name: admin
       password: admin123
+jwt:
+  secret: super-secret-key-1234567890-super-strong
