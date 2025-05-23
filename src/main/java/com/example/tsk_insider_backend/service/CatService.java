@@ -11,7 +11,9 @@ import org.springframework.stereotype.Service;
 import com.example.tsk_insider_backend.dto.CatCreateDTO;
 import com.example.tsk_insider_backend.dto.CatUpdateDTO;
 import com.example.tsk_insider_backend.entity.Cat;
+import com.example.tsk_insider_backend.entity.Vet;
 import com.example.tsk_insider_backend.respository.CatRepository;
+import com.example.tsk_insider_backend.respository.VetRepository;
 
 import jakarta.persistence.EntityNotFoundException;
 
@@ -19,8 +21,11 @@ import jakarta.persistence.EntityNotFoundException;
 public class CatService {
     private final CatRepository catRepository;
 
-    public CatService(CatRepository catRepository) {
+    private final VetRepository vetRepository;
+
+    public CatService(CatRepository catRepository, VetRepository vetRepository) {
         this.catRepository = catRepository;
+        this.vetRepository = vetRepository;
     }
 
     public List<Cat> getAllCats() {
@@ -75,9 +80,26 @@ public class CatService {
         catRepository.deleteById(id);
     }
 
+    public void addVet(UUID catId, UUID vetId, Authentication authentication) {
+        Cat cat = catRepository.findById(catId)
+                .orElseThrow(() -> new EntityNotFoundException("Cat not found"));
+
+        if ( isBurrowKeeper(authentication) && cat.getCageNumber() == null ) { //TODO przed resztą zablokuj
+            throw new AccessDeniedException("BURROW_KEEPER może usuwać tylko koty w norze!");
+        }
+
+        Vet vet = vetRepository.findById(vetId)
+                .orElseThrow(() -> new EntityNotFoundException("Vet not found"));
+
+        cat.getVet().add(vet);
+        catRepository.save(cat);
+    }
+
     private boolean isBurrowKeeper(Authentication authentication) {
-        return authentication.getAuthorities().stream()
-                .anyMatch(auth -> auth.getAuthority().equals("ROLE_BURROW_KEEPER"));
+        return authentication.getAuthorities()
+                .stream()
+                .anyMatch(auth -> auth.getAuthority()
+                        .equals("ROLE_BURROW_KEEPER"));
     }
 
     private Cat createDTOtoEntity(CatCreateDTO catDTO) {

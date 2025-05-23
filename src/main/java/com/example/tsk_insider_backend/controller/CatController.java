@@ -9,6 +9,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -49,14 +50,6 @@ public class CatController {
                         .build());
     }
 
-    @GetMapping("/burrow")
-    public ResponseEntity<List<CatReadDTO>> getCatsInBurrow() {
-        return ResponseEntity.ok(catService.getCatsInBurrow()
-                .stream()
-                .map(CatReadDTO::from)
-                .toList());
-    }
-
     @PreAuthorize("hasAnyRole('BURROW_KEEPER', 'MANAGEMENT', 'ADMIN')")
     @PostMapping
     public ResponseEntity<CatReadDTO> createCat(@RequestBody CatCreateDTO catDTO, Authentication authentication) {
@@ -83,5 +76,19 @@ public class CatController {
         catService.deleteCat(id, authentication);
         return ResponseEntity.noContent()
                 .build();
+    }
+
+    @GetMapping("/burrow")
+    public ResponseEntity<List<CatReadDTO>> getCatsInBurrow() {
+        return ResponseEntity.ok(catService.getCatsInBurrow()
+                .stream()
+                .map(CatReadDTO::from)
+                .toList());
+    }
+
+    @PatchMapping("/{catId}/vet")
+    public ResponseEntity<Void> addVet(@PathVariable UUID catId, @RequestBody UUID vetId, Authentication auth) {
+        catService.addVet(catId, vetId, auth);
+        return ResponseEntity.noContent().build();
     }
 }

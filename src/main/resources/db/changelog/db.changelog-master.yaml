@@ -63,12 +63,6 @@ databaseChangeLog:
               - column:
                   name: gender
                   type: VARCHAR(10)
-              - column:
-                  name: vet_id
-                  type: UUID
-                  constraints:
-                    foreignKeyName: fk_cat_vet
-                    references: vet(id)
 
   - changeSet:
       id: 3
@@ -168,4 +162,28 @@ databaseChangeLog:
                     nullable: false
                     foreignKeyName: fk_user_roles_role
                     referencedTableName: roles
+                    referencedColumnNames: id
+
+  - changeSet:
+      id: 7
+      author: szyman90
+      changes:
+        - createTable:
+            tableName: cat_vets
+            columns:
+              - column:
+                  name: cat_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_cat_vets_cat
+                    referencedTableName: cat
+                    referencedColumnNames: id
+              - column:
+                  name: vet_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_cat_vets_vet
+                    referencedTableName: vet
                     referencedColumnNames: id

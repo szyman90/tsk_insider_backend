@@ -3,6 +3,7 @@ package com.example.tsk_insider_backend.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
 import java.util.UUID;
 
 import com.example.tsk_insider_backend.enums.Gender;
@@ -32,7 +33,11 @@ public class Cat {
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
-    @ManyToOne
-    @JoinColumn(name = "vet_id")
-    private Vet vet;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "cat_vets",
+            joinColumns = @JoinColumn(name = "cat_id"),
+            inverseJoinColumns = @JoinColumn(name = "vet_id"))
+
+    private List<Vet> vet;
 }
