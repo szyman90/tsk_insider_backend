@@ -1,5 +1,8 @@
 package com.example.tsk_insider_backend.service;
 
+import static com.example.tsk_insider_backend.util.RoleVerificationUtil.CAT_NOT_FROM_BURROW;
+import static com.example.tsk_insider_backend.util.RoleVerificationUtil.isBurrowKeeper;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -9,6 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import com.example.tsk_insider_backend.dto.CatCreateDTO;
+import com.example.tsk_insider_backend.dto.CatReadDTO;
 import com.example.tsk_insider_backend.dto.CatUpdateDTO;
 import com.example.tsk_insider_backend.entity.Cat;
 import com.example.tsk_insider_backend.entity.Vet;
@@ -19,6 +23,9 @@ import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class CatService {
+
+    public static final String CAT_NOT_FOUND = "Cat not found";
+
     private final CatRepository catRepository;
 
     private final VetRepository vetRepository;
@@ -28,8 +35,10 @@ public class CatService {
         this.vetRepository = vetRepository;
     }
 
-    public List<Cat> getAllCats() {
-        return catRepository.findAll();
+    public List<CatReadDTO> getAllCats() {
+        return catRepository.findAll().stream()
+                .map(CatReadDTO::from)
+                .toList();
     }
 
     public Optional<Cat> getCatById(UUID id) {
@@ -42,7 +51,7 @@ public class CatService {
 
     public Cat createCat(CatCreateDTO catDTO, Authentication authentication) {
         if (isBurrowKeeper(authentication) && catDTO.cageNumber() == null) {
-            throw new AccessDeniedException("BURROW_KEEPER może dodawać tylko koty do nory!");
+            throw new AccessDeniedException(CAT_NOT_FROM_BURROW);
         }
         Cat dtOtoEntity = createDTOtoEntity(catDTO);
         return catRepository.save(dtOtoEntity);
@@ -50,10 +59,10 @@ public class CatService {
 
     public void updateCat(UUID id, CatUpdateDTO updatedCat, Authentication authentication) {
         Cat existingCat = catRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Cat not found"));
+                .orElseThrow(() -> new EntityNotFoundException(CAT_NOT_FOUND));
 
         if (isBurrowKeeper(authentication) && existingCat.getCageNumber() == null) {
-            throw new AccessDeniedException("BURROW_KEEPER może edytować tylko koty w norze!");
+            throw new AccessDeniedException(CAT_NOT_FROM_BURROW);
         }
 
         existingCat.setName(updatedCat.name());
@@ -71,10 +80,10 @@ public class CatService {
 
     public void deleteCat(UUID id, Authentication authentication) {
         Cat cat = catRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Cat not found"));
+                .orElseThrow(() -> new EntityNotFoundException(CAT_NOT_FOUND));
 
-        if (isBurrowKeeper(authentication) && cat.getCageNumber() == null) { //TODO przed resztą zablokuj
-            throw new AccessDeniedException("BURROW_KEEPER może usuwać tylko koty w norze!");
+        if (isBurrowKeeper(authentication) && cat.getCageNumber() == null) {
+            throw new AccessDeniedException(CAT_NOT_FROM_BURROW);
         }
 
         catRepository.deleteById(id);
@@ -82,10 +91,10 @@ public class CatService {
 
     public void addVet(UUID catId, UUID vetId, Authentication authentication) {
         Cat cat = catRepository.findById(catId)
-                .orElseThrow(() -> new EntityNotFoundException("Cat not found"));
+                .orElseThrow(() -> new EntityNotFoundException(CAT_NOT_FOUND));
 
-        if ( isBurrowKeeper(authentication) && cat.getCageNumber() == null ) { //TODO przed resztą zablokuj
-            throw new AccessDeniedException("BURROW_KEEPER może usuwać tylko koty w norze!");
+        if ( isBurrowKeeper(authentication) && cat.getCageNumber() == null ) {
+            throw new AccessDeniedException(CAT_NOT_FROM_BURROW);
         }
 
         Vet vet = vetRepository.findById(vetId)
@@ -93,13 +102,6 @@ public class CatService {
 
         cat.getVet().add(vet);
         catRepository.save(cat);
-    }
-
-    private boolean isBurrowKeeper(Authentication authentication) {
-        return authentication.getAuthorities()
-                .stream()
-                .anyMatch(auth -> auth.getAuthority()
-                        .equals("ROLE_BURROW_KEEPER"));
     }
 
     private Cat createDTOtoEntity(CatCreateDTO catDTO) {

@@ -37,7 +37,7 @@ public class CatController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Cat>> getAllCats() {
+    public ResponseEntity<List<CatReadDTO>> getAllCats() {
         return ResponseEntity.ok(catService.getAllCats());
     }
 
@@ -78,6 +78,7 @@ public class CatController {
                 .build();
     }
 
+    @PreAuthorize("hasAnyRole('BURROW_KEEPER', 'MANAGEMENT', 'ADMIN')")
     @GetMapping("/burrow")
     public ResponseEntity<List<CatReadDTO>> getCatsInBurrow() {
         return ResponseEntity.ok(catService.getCatsInBurrow()
@@ -86,6 +87,7 @@ public class CatController {
                 .toList());
     }
 
+    @PreAuthorize("hasAnyRole('BURROW_KEEPER', 'MANAGEMENT', 'ADMIN')")
     @PatchMapping("/{catId}/vet")
     public ResponseEntity<Void> addVet(@PathVariable UUID catId, @RequestBody UUID vetId, Authentication auth) {
         catService.addVet(catId, vetId, auth);
