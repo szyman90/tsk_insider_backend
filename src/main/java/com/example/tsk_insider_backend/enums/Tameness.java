@@ -1,5 +1,5 @@
 package com.example.tsk_insider_backend.enums;
 
 public enum Tameness {
-    TAME, WILD
+    TAME, WILD, DONT_KNOW
 }

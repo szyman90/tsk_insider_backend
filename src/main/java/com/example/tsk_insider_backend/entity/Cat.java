@@ -28,6 +28,7 @@ public class Cat {
     private Tameness tameness;
 
     private boolean isVaccinated;
+
     private boolean isNeutered;
 
     @Enumerated(EnumType.STRING)
@@ -38,6 +39,8 @@ public class Cat {
             name = "cat_vets",
             joinColumns = @JoinColumn(name = "cat_id"),
             inverseJoinColumns = @JoinColumn(name = "vet_id"))
-
     private List<Vet> vet;
+
+    @OneToMany(mappedBy = "cat", cascade = CascadeType.ALL)
+    private List<MedicalRecommendation> medicalRecommendations;
 }

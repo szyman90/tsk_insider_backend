@@ -1,0 +1,15 @@
+package com.example.tsk_insider_backend.enums;
+
+public enum MedicationForm {
+    TABLET,
+    SYRUP,
+    INJECTION,
+    DROPS,
+    OINTMENT,
+    SPRAY,
+    PATCH,
+    POWDER,
+    GEL,
+    LIQUID,
+    OTHER
+}
