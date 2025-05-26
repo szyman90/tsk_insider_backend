@@ -187,3 +187,160 @@ databaseChangeLog:
                     foreignKeyName: fk_cat_vets_vet
                     referencedTableName: vet
                     referencedColumnNames: id
+
+  - changeSet:
+      id: 8
+      author: szyman90
+      changes:
+        - createTable:
+            tableName: medicine
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: description
+                  type: VARCHAR(1000)
+
+              - column:
+                  name: medication_form
+                  type: VARCHAR(50)
+
+              - column:
+                  name: dosage_unit
+                  type: VARCHAR(50)
+
+  - changeSet:
+      id: 9
+      author: szyman90
+      changes:
+        - createTable:
+            tableName: medical_recommendation
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+
+              - column:
+                  name: cat_id
+                  type: UUID
+                  constraints:
+                    foreignKeyName: fk_cat_medical_recommendation
+                    references: cat(id)
+
+              - column:
+                  name: medicine_id
+                  type: UUID
+                  constraints:
+                    foreignKeyName: fk_medicine_medical_recommendation
+                    references: medicine(id)
+
+              - column:
+                  name: dosage
+                  type: DOUBLE
+
+              - column:
+                  name: start_date
+                  type: DATE
+
+              - column:
+                  name: end_date
+                  type: DATE
+
+              - column:
+                  name: frequency
+                  type: VARCHAR(255)
+
+              - column:
+                  name: notes
+                  type: VARCHAR(1000)
+
+              - column:
+                  name: active
+                  type: BOOLEAN
+                  defaultValueBoolean: true
+
+  - changeSet:
+      id: 10
+      author: szyman90
+      changes:
+        - createTable:
+            tableName: vaccination
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+
+              - column:
+                  name: cat_id
+                  type: UUID
+                  constraints:
+                    foreignKeyName: fk_cat_vaccination
+                    references: medicine(id)
+
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: type
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: date
+                  type: DATE
+
+  - changeSet:
+      id: 11
+      author: szyman90
+      changes:
+        - createTable:
+            tableName: shift_task
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(255)
+              - column:
+                  name: required
+                  type: boolean
+
+        - createTable:
+            tableName: shift_task_states
+            columns:
+              - column:
+                  name: shift_task_id
+                  type: UUID
+                  constraints:
+                    foreignKeyName: fk_shift_task_states_task
+                    references: shift_task(id)
+              - column:
+                  name: states
+                  type: varchar(255)
+
+#                  TODO poprawić changesety względem zmienionych tabel

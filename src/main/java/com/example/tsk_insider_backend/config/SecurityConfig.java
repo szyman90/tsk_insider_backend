@@ -11,7 +11,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.example.tsk_insider_backend.util.JwtAuthFilter;
+import com.example.tsk_insider_backend.auth.JwtAuthFilter;
 
 @EnableWebSecurity
 @Configuration
