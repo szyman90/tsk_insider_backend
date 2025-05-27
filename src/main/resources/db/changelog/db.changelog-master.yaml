@@ -4,28 +4,6 @@ databaseChangeLog:
       author: szyman90
       changes:
         - createTable:
-            tableName: vet
-            columns:
-              - column:
-                  name: id
-                  type: UUID
-                  constraints:
-                    primaryKey: true
-                    nullable: false
-              - column:
-                  name: name
-                  type: VARCHAR(255)
-                  constraints:
-                    nullable: false
-              - column:
-                  name: address
-                  type: TEXT
-
-  - changeSet:
-      id: 2
-      author: szyman90
-      changes:
-        - createTable:
             tableName: cat
             columns:
               - column:
@@ -37,35 +15,169 @@ databaseChangeLog:
               - column:
                   name: name
                   type: VARCHAR(255)
-                  constraints:
-                    nullable: false
               - column:
                   name: age
-                  type: INTEGER
+                  type: INT
               - column:
                   name: weight
                   type: DOUBLE
               - column:
                   name: cage_number
-                  type: INTEGER
-              - column:
-                  name: character
-                  type: TEXT
+                  type: INT
               - column:
                   name: tameness
-                  type: VARCHAR(50)
-              - column:
-                  name: is_vaccinated
-                  type: BOOLEAN
+                  type: VARCHAR(255)
               - column:
                   name: is_neutered
                   type: BOOLEAN
               - column:
                   name: gender
-                  type: VARCHAR(10)
+                  type: VARCHAR(255)
+
+  - changeSet:
+      id: 2
+      author: szyman90
+      changes:
+        - createTable:
+            tableName: vet
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+              - column:
+                  name: address
+                  type: VARCHAR(255)
 
   - changeSet:
       id: 3
+      author: szyman90
+      changes:
+        - createTable:
+            tableName: cat_vets
+            columns:
+              - column:
+                  name: cat_id
+                  type: UUID
+                  constraints:
+                    foreignKeyName: fk_cat_vets_cat
+                    references: cat(id)
+              - column:
+                  name: vet_id
+                  type: UUID
+                  constraints:
+                    foreignKeyName: fk_cat_vets_vet
+                    references: vet(id)
+
+  - changeSet:
+      id: 4
+      author: szyman90
+      changes:
+        - createTable:
+            tableName: vaccination
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: cat_id
+                  type: UUID
+                  constraints:
+                    foreignKeyName: fk_vaccination_cat
+                    references: cat(id)
+                    nullable: false
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+              - column:
+                  name: type
+                  type: VARCHAR(255)
+              - column:
+                  name: date
+                  type: DATE
+
+  - changeSet:
+      id: 5
+      author: szyman90
+      changes:
+        - createTable:
+            tableName: medication
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+              - column:
+                  name: description
+                  type: VARCHAR(255)
+              - column:
+                  name: medication_form
+                  type: VARCHAR(255)
+              - column:
+                  name: dosage_unit
+                  type: VARCHAR(255)
+
+  - changeSet:
+      id: 6
+      author: szyman90
+      changes:
+        - createTable:
+            tableName: medical_recommendation
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: cat_id
+                  type: UUID
+                  constraints:
+                    foreignKeyName: fk_medical_recommendation_cat
+                    references: cat(id)
+                    nullable: false
+              - column:
+                  name: medication_id
+                  type: UUID
+                  constraints:
+                    foreignKeyName: fk_medical_recommendation_med
+                    references: medication(id)
+                    nullable: false
+              - column:
+                  name: dosage
+                  type: DOUBLE
+              - column:
+                  name: start_date
+                  type: DATE
+              - column:
+                  name: end_date
+                  type: DATE
+              - column:
+                  name: frequency
+                  type: VARCHAR(255)
+              - column:
+                  name: notes
+                  type: VARCHAR(255)
+              - column:
+                  name: active
+                  type: BOOLEAN
+
+  - changeSet:
+      id: 7
       author: szyman90
       changes:
         - createTable:
@@ -90,36 +202,16 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: result
-                  type: VARCHAR(20)
+                  type: VARCHAR(255)
                   constraints:
                     nullable: false
-  - changeSet:
-      id: 4
-      author: szyman90
-      changes:
-        - createTable:
-            tableName: roles
-            columns:
-              - column:
-                  name: id
-                  type: UUID
-                  constraints:
-                    primaryKey: true
-                    nullable: false
-                    unique: true
-              - column:
-                  name: name
-                  type: VARCHAR(50)
-                  constraints:
-                    nullable: false
-                    unique: true
 
   - changeSet:
-      id: 5
+      id: 8
       author: szyman90
       changes:
         - createTable:
-            tableName: users
+            tableName: role
             columns:
               - column:
                   name: id
@@ -127,13 +219,32 @@ databaseChangeLog:
                   constraints:
                     primaryKey: true
                     nullable: false
+              - column:
+                  name: role_type
+                  type: VARCHAR(255)
+                  constraints:
                     unique: true
+                    nullable: false
+
+  - changeSet:
+      id: 9
+      author: szyman90
+      changes:
+        - createTable:
+            tableName: app_user
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
               - column:
                   name: username
-                  type: VARCHAR(100)
+                  type: VARCHAR(255)
                   constraints:
-                    nullable: false
                     unique: true
+                    nullable: false
               - column:
                   name: password
                   type: VARCHAR(255)
@@ -141,7 +252,7 @@ databaseChangeLog:
                     nullable: false
 
   - changeSet:
-      id: 6
+      id: 10
       author: szyman90
       changes:
         - createTable:
@@ -151,164 +262,14 @@ databaseChangeLog:
                   name: user_id
                   type: UUID
                   constraints:
-                    nullable: false
                     foreignKeyName: fk_user_roles_user
-                    referencedTableName: users
-                    referencedColumnNames: id
+                    references: app_user(id)
               - column:
                   name: role_id
                   type: UUID
                   constraints:
-                    nullable: false
                     foreignKeyName: fk_user_roles_role
-                    referencedTableName: roles
-                    referencedColumnNames: id
-
-  - changeSet:
-      id: 7
-      author: szyman90
-      changes:
-        - createTable:
-            tableName: cat_vets
-            columns:
-              - column:
-                  name: cat_id
-                  type: UUID
-                  constraints:
-                    nullable: false
-                    foreignKeyName: fk_cat_vets_cat
-                    referencedTableName: cat
-                    referencedColumnNames: id
-              - column:
-                  name: vet_id
-                  type: UUID
-                  constraints:
-                    nullable: false
-                    foreignKeyName: fk_cat_vets_vet
-                    referencedTableName: vet
-                    referencedColumnNames: id
-
-  - changeSet:
-      id: 8
-      author: szyman90
-      changes:
-        - createTable:
-            tableName: medicine
-            columns:
-              - column:
-                  name: id
-                  type: UUID
-                  constraints:
-                    primaryKey: true
-                    nullable: false
-
-              - column:
-                  name: name
-                  type: VARCHAR(255)
-                  constraints:
-                    nullable: false
-
-              - column:
-                  name: description
-                  type: VARCHAR(1000)
-
-              - column:
-                  name: medication_form
-                  type: VARCHAR(50)
-
-              - column:
-                  name: dosage_unit
-                  type: VARCHAR(50)
-
-  - changeSet:
-      id: 9
-      author: szyman90
-      changes:
-        - createTable:
-            tableName: medical_recommendation
-            columns:
-              - column:
-                  name: id
-                  type: UUID
-                  constraints:
-                    primaryKey: true
-                    nullable: false
-
-              - column:
-                  name: cat_id
-                  type: UUID
-                  constraints:
-                    foreignKeyName: fk_cat_medical_recommendation
-                    references: cat(id)
-
-              - column:
-                  name: medicine_id
-                  type: UUID
-                  constraints:
-                    foreignKeyName: fk_medicine_medical_recommendation
-                    references: medicine(id)
-
-              - column:
-                  name: dosage
-                  type: DOUBLE
-
-              - column:
-                  name: start_date
-                  type: DATE
-
-              - column:
-                  name: end_date
-                  type: DATE
-
-              - column:
-                  name: frequency
-                  type: VARCHAR(255)
-
-              - column:
-                  name: notes
-                  type: VARCHAR(1000)
-
-              - column:
-                  name: active
-                  type: BOOLEAN
-                  defaultValueBoolean: true
-
-  - changeSet:
-      id: 10
-      author: szyman90
-      changes:
-        - createTable:
-            tableName: vaccination
-            columns:
-              - column:
-                  name: id
-                  type: UUID
-                  constraints:
-                    primaryKey: true
-                    nullable: false
-
-              - column:
-                  name: cat_id
-                  type: UUID
-                  constraints:
-                    foreignKeyName: fk_cat_vaccination
-                    references: medicine(id)
-
-              - column:
-                  name: name
-                  type: VARCHAR(255)
-                  constraints:
-                    nullable: false
-
-              - column:
-                  name: type
-                  type: VARCHAR(50)
-                  constraints:
-                    nullable: false
-
-              - column:
-                  name: date
-                  type: DATE
+                    references: role(id)
 
   - changeSet:
       id: 11
@@ -325,22 +286,49 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: name
-                  type: varchar(255)
+                  type: VARCHAR(255)
               - column:
                   name: required
-                  type: boolean
+                  type: BOOLEAN
 
+  - changeSet:
+      id: 12
+      author: szyman90
+      changes:
         - createTable:
-            tableName: shift_task_states
+            tableName: shift
             columns:
               - column:
-                  name: shift_task_id
+                  name: id
                   type: UUID
                   constraints:
-                    foreignKeyName: fk_shift_task_states_task
-                    references: shift_task(id)
-              - column:
-                  name: states
-                  type: varchar(255)
+                    primaryKey: true
+                    nullable: false
 
-#                  TODO poprawić changesety względem zmienionych tabel
+  - changeSet:
+      id: 13
+      author: szyman90
+      changes:
+        - createTable:
+            tableName: cat_shift_action
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: shift_id
+                  type: UUID
+                  constraints:
+                    foreignKeyName: fk_cat_shift_shift
+                    references: shift(id)
+                    nullable: false
+              - column:
+                  name: cat_id
+                  type: UUID
+                  constraints:
+                    foreignKeyName: fk_cat_shift_cat
+                    references: cat(id)
+                    nullable: false
