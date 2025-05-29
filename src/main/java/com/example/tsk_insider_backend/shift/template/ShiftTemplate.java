@@ -2,35 +2,27 @@ package com.example.tsk_insider_backend.shift.template;
 
 import jakarta.persistence.*;
 import lombok.*;
+
 import java.util.*;
 
-@Entity
-@Table(name = "shift")
+import com.example.tsk_insider_backend.shift.ShiftAbstract;
+
+@Entity(name = "shift_template")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ShiftTemplate {
+public class ShiftTemplate extends ShiftAbstract {
+
+    @Column(nullable = false, name = "active")
+    private boolean active;
+
+    @Column(nullable = false, name = "version")
+    private int version;
+
+    @OneToMany(mappedBy = "shift_template", cascade = CascadeType.ALL)
     List<BurrowTaskTemplate> burrowTasks;
-    List<ActionPerCatTemplate> actionsPerCat;
 
-//    @Column(name = "mopped")
-//    private boolean mopped;
-//
-//    @Column(name = "swept")
-//    private boolean swept;
-//
-//    @Enumerated(EnumType.STRING)
-//    @Column(name = "light")
-//    private Light light;
-//
-//
-//    @Enumerated(EnumType.STRING)
-//    @Column(name = "roller_blind")
-//    private RollerBlind rollerBlind;
-//
-//    @Enumerated(EnumType.STRING)
-//    @Column(name = "dishwasher")
-//    private Dishwasher dishwasher;
-
+    @OneToMany(mappedBy = "shift_template", cascade = CascadeType.ALL)
+    List<ActionsPerCatTemplate> actionsPerCat;
 }

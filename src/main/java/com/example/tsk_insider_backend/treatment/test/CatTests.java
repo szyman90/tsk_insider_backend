@@ -12,13 +12,14 @@ import com.example.tsk_insider_backend.cat.Cat;
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor
 public class CatTests {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @ManyToOne
     @JoinColumn(name = "cat_id")
     private Cat cat;
 
+    @Column(name = "test_type")
     private TestType testType;
 
     @Enumerated(EnumType.STRING)

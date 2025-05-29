@@ -1,6 +1,7 @@
 package com.example.tsk_insider_backend.treatment.medication.recommendation;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 import com.example.tsk_insider_backend.cat.Cat;
 import com.example.tsk_insider_backend.treatment.medication.Medication;
@@ -10,6 +11,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
@@ -27,8 +29,8 @@ import lombok.Setter;
 @AllArgsConstructor
 public class MedicalRecommendation {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
     @ManyToOne(optional = false)
     private Cat cat;
