@@ -17,5 +17,5 @@ public class BurrowTaskInstance extends TaskInstanceAbstract {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "shift_instance_id")
-    ShiftInstance shiftInstance;
+    private ShiftInstance shiftInstance;
 }

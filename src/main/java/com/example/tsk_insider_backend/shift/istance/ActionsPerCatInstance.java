@@ -35,8 +35,8 @@ public class ActionsPerCatInstance {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "cat_id")
-    Cat cat;
+    private Cat cat;
 
     @OneToMany(mappedBy = "action_per_cat_instance", cascade = CascadeType.ALL)
-    List<CatTaskInstance> catTaskInstances;
+    private List<CatTaskInstance> catTaskInstances;
 }

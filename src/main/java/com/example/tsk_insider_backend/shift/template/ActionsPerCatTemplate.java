@@ -35,8 +35,8 @@ public class ActionsPerCatTemplate {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "cat_id")
-    Cat cat;
+    private Cat cat;
 
     @OneToMany(mappedBy = "action_per_cat_template", cascade = CascadeType.ALL)
-    List<CatTaskTemplate> catTasks;
+    private List<CatTaskTemplate> catTasks;
 }

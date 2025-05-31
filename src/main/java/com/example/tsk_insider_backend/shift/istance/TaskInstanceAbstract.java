@@ -14,6 +14,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public abstract class TaskInstanceAbstract extends TaskAbstract {
-    String actualState;
+    private String actualState;
 }
 

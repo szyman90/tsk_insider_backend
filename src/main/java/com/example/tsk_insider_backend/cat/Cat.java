@@ -44,7 +44,7 @@ public class Cat {
             name = "cat_vets",
             joinColumns = @JoinColumn(name = "cat_id"),
             inverseJoinColumns = @JoinColumn(name = "vet_id"))
-    private List<Vet> vet;
+    private List<Vet> vets;
 
     @OneToMany(mappedBy = "cat", cascade = CascadeType.ALL)
     private List<MedicalRecord> medicalRecords;

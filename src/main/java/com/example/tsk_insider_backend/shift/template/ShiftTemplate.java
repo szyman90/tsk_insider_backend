@@ -21,8 +21,8 @@ public class ShiftTemplate extends ShiftAbstract {
     private int version;
 
     @OneToMany(mappedBy = "shift_template", cascade = CascadeType.ALL)
-    List<BurrowTaskTemplate> burrowTasks;
+    private List<BurrowTaskTemplate> burrowTasks;
 
     @OneToMany(mappedBy = "shift_template", cascade = CascadeType.ALL)
-    List<ActionsPerCatTemplate> actionsPerCat;
+    private List<ActionsPerCatTemplate> actionsPerCat;
 }

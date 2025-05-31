@@ -17,5 +17,5 @@ public class CatTaskInstance extends TaskInstanceAbstract {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "action_per_cat_instance_id")
-    ActionsPerCatInstance taskPerCatInstance;
+    private ActionsPerCatInstance taskPerCatInstance;
 }

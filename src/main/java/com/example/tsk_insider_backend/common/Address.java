@@ -16,7 +16,6 @@ public class Address {
 
     private String street;
 
-
     @Column(name = "house_number")
     private String houseNumber;
 
