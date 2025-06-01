@@ -14,5 +14,6 @@ public enum TestType {
     T4,                    // Thyroid
     URINALYSIS,
     SDMA,
-    FECAL_EXAM
+    FECAL_EXAM,
+    IBD
 }

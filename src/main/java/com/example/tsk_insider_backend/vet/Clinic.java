@@ -35,6 +35,13 @@ public class Clinic {
     @Embedded
     private Address address;
 
+    private String email;
+
+    private String number;
+
+    private boolean appRegistration;
+
     @OneToMany(mappedBy = "clinic", cascade = CascadeType.ALL)
     private List<Vet> vets;
+
 }

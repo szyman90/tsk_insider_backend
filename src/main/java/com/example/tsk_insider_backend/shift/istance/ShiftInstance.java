@@ -20,8 +20,8 @@ import lombok.Setter;
 public class ShiftInstance extends ShiftAbstract {
 
     @OneToMany(mappedBy = "shift_instance", cascade = CascadeType.ALL)
-    private List<BurrowTaskInstance> burrowTasks;
+    List<BurrowTaskInstance> burrowTasks;
 
     @OneToMany(mappedBy = "shift_instance", cascade = CascadeType.ALL)
-    private List<ActionsPerCatInstance> actionsPerCat;
+    List<ActionsPerCatInstance> actionsPerCat;
 }
