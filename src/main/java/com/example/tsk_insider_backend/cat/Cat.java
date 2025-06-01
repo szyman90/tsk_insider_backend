@@ -25,6 +25,10 @@ public class Cat {
 
     private double weight;
 
+    private String chipNumer;
+
+    private Marking marking;
+
     @Column(name = "cage_number")
     private Integer cageNumber;
 
@@ -47,8 +51,13 @@ public class Cat {
     private List<Vet> vet;
 
     @OneToMany(mappedBy = "cat", cascade = CascadeType.ALL)
-    private List<MedicalRecord> medicalRecords;
+    private List<MedicalRecord> medicalRecords; //TODO kiedy jedzie i gdzie
 
     @OneToMany(mappedBy = "cat", cascade = CascadeType.ALL)
     private List<MedicalRecommendation> medicalRecommendations;
+
+    @Column(name = "additional_notes")
+    private String additionalNotes;
+
+    //TODO osobne pole na choroby?
 }

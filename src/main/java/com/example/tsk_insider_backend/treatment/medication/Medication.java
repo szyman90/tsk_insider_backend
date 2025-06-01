@@ -2,6 +2,7 @@ package com.example.tsk_insider_backend.treatment.medication;
 
 import java.util.UUID;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -35,5 +36,7 @@ public class Medication {
     @Enumerated(EnumType.STRING)
     private DosageUnit dosageUnit;
 
+    @Column(name = "additional_notes")
+    private String additionalNotes;
 
 }

@@ -20,9 +20,11 @@ public class Vet {
 
     private String surname;
 
+    private MedicalSpeciality medicalSpeciality;
+
     @ManyToOne(optional = false)
     private Clinic clinic;
 
     @OneToMany(mappedBy = "vet", cascade = CascadeType.ALL)
-    private List<MedicalRecord> medicalRecords;
+    private List<MedicalRecord> medicalRecords; //TODO czy to ma sens
 }
