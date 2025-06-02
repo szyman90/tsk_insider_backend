@@ -25,7 +25,7 @@ public class Cat {
 
     private double weight;
 
-    private String chipNumer;
+    private String chipNumber; //TODO zapytać skąd zamawiamy chipy. Ewentualne dodatkowe zapytanie przy prefixie
 
     private Marking marking;
 

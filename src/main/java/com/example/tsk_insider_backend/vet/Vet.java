@@ -20,7 +20,9 @@ public class Vet {
 
     private String surname;
 
-    private MedicalSpeciality medicalSpeciality;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "vet_specialization")
+    private VetSpecialization vetSpecialization;
 
     @ManyToOne(optional = false)
     private Clinic clinic;
