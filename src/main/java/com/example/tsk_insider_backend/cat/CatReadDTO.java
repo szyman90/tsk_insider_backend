@@ -9,6 +9,6 @@ public record CatReadDTO(UUID id, String name, int age, double weight, Integer c
                          Gender gender, List<Vet> vet) {
     public static CatReadDTO from(Cat cat) {
         return new CatReadDTO(cat.getId(), cat.getName(), cat.getAge(), cat.getWeight(), cat.getCageNumber(), cat.getTameness(), false,
-                cat.isNeutered(), cat.getGender(), cat.getVet());
+                cat.isNeutered(), cat.getGender(), cat.getVets());
     }
 }

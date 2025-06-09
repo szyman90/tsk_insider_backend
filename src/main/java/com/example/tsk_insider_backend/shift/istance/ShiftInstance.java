@@ -19,9 +19,9 @@ import lombok.Setter;
 @NoArgsConstructor
 public class ShiftInstance extends ShiftAbstract {
 
-    @OneToMany(mappedBy = "shift_instance", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "shiftInstance", cascade = CascadeType.ALL)
     private List<BurrowTaskInstance> burrowTasks;
 
-    @OneToMany(mappedBy = "shift_instance", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "shiftInstance", cascade = CascadeType.ALL)
     private List<ActionsPerCatInstance> actionsPerCat;
 }

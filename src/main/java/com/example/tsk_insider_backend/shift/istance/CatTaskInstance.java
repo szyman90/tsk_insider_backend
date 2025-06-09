@@ -16,6 +16,6 @@ import lombok.Setter;
 public class CatTaskInstance extends TaskInstanceAbstract {
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "action_per_cat_instance_id")
+    @JoinColumn(name = "actions_per_cat_instance_id")
     private ActionsPerCatInstance taskPerCatInstance;
 }

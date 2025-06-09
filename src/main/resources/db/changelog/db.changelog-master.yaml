@@ -11,31 +11,422 @@ databaseChangeLog:
                   type: UUID
                   constraints:
                     primaryKey: true
-                    nullable: false
               - column:
                   name: name
-                  type: VARCHAR(255)
+                  type: varchar(255)
               - column:
                   name: age
-                  type: INT
+                  type: int
               - column:
                   name: weight
-                  type: DOUBLE
+                  type: double
+              - column:
+                  name: chip_number
+                  type: varchar(255)
+              - column:
+                  name: marking
+                  type: varchar(255)
               - column:
                   name: cage_number
-                  type: INT
+                  type: int
               - column:
                   name: tameness
-                  type: VARCHAR(255)
+                  type: varchar(255)
               - column:
-                  name: is_neutered
-                  type: BOOLEAN
+                  name: neutered
+                  type: boolean
               - column:
                   name: gender
-                  type: VARCHAR(255)
+                  type: varchar(255)
+              - column:
+                  name: additional_info
+                  type: varchar(255)
+              - column:
+                  name: created_at
+                  type: datetime
+              - column:
+                  name: updated_at
+                  type: datetime
 
   - changeSet:
       id: 2
+      author: szyman90
+      changes:
+        - createTable:
+            tableName: shift_instance
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamp
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 3
+      author: szyman90
+      changes:
+        - createTable:
+            tableName: actions_per_cat_instance
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: shift_instance_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: cat_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: actions_per_cat_instance
+            baseColumnNames: shift_instance_id
+            referencedTableName: shift_instance
+            referencedColumnNames: id
+            constraintName: fk_actions_cat_shift
+            onDelete: CASCADE
+        - addForeignKeyConstraint:
+            baseTableName: actions_per_cat_instance
+            baseColumnNames: cat_id
+            referencedTableName: cat
+            referencedColumnNames: id
+            constraintName: fk_actions_cat_cat
+            onDelete: CASCADE
+
+  - changeSet:
+      id: 4
+      author: szyman90
+      changes:
+        - createTable:
+            tableName: cat_task_instance
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(255)
+              - column:
+                  name: additional_info
+                  type: varchar(255)
+              - column:
+                  name: actual_state
+                  type: varchar(255)
+              - column:
+                  name: actions_per_cat_instance_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: cat_task_instance
+            baseColumnNames: actions_per_cat_instance_id
+            referencedTableName: actions_per_cat_instance
+            referencedColumnNames: id
+            constraintName: fk_cat_task_actions
+            onDelete: CASCADE
+
+  - changeSet:
+      id: 5
+      author: szyman90
+      changes:
+        - createTable:
+            tableName: burrow_task_instance
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(255)
+              - column:
+                  name: additional_info
+                  type: varchar(255)
+              - column:
+                  name: actual_state
+                  type: varchar(255)
+              - column:
+                  name: shift_instance_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: burrow_task_instance
+            baseColumnNames: shift_instance_id
+            referencedTableName: shift_instance
+            referencedColumnNames: id
+            constraintName: fk_burrow_shift
+            onDelete: CASCADE
+
+  - changeSet:
+      id: 6
+      author: szyman90
+      changes:
+        - createTable:
+            tableName: shift_template
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: active
+                  type: boolean
+                  constraints:
+                    nullable: false
+              - column:
+                  name: version
+                  type: int
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 7
+      author: szyman90
+      changes:
+        - createTable:
+            tableName: actions_per_cat_template
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: shift_template_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: cat_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: actions_per_cat_template
+            baseColumnNames: shift_template_id
+            referencedTableName: shift_template
+            referencedColumnNames: id
+            constraintName: fk_actions_cat_template_shift
+            onDelete: CASCADE
+        - addForeignKeyConstraint:
+            baseTableName: actions_per_cat_template
+            baseColumnNames: cat_id
+            referencedTableName: cat
+            referencedColumnNames: id
+            constraintName: fk_actions_cat_template_cat
+            onDelete: CASCADE
+
+  - changeSet:
+      id: 8
+      author: szyman90
+      changes:
+        - createTable:
+            tableName: burrow_task_template
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(255)
+              - column:
+                  name: additional_info
+                  type: varchar(255)
+              - column:
+                  name: shift_template_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: burrow_task_template
+            baseColumnNames: shift_template_id
+            referencedTableName: shift_template
+            referencedColumnNames: id
+            constraintName: fk_burrow_task_template_shift
+            onDelete: CASCADE
+
+  - changeSet:
+      id: 9
+      author: szyman90
+      changes:
+        - createTable:
+            tableName: cat_task_template
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(255)
+              - column:
+                  name: additional_info
+                  type: varchar(255)
+              - column:
+                  name: actions_per_cat_template_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: cat_task_template
+            baseColumnNames: actions_per_cat_template_id
+            referencedTableName: actions_per_cat_template
+            referencedColumnNames: id
+            constraintName: fk_cat_task_template_actions_per_cat_template
+            onDelete: CASCADE
+
+  - changeSet:
+      id: 10
+      author: szyman90
+      changes:
+        - createTable:
+            tableName: cat_disease
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: cat_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: diagnosis_date
+                  type: date
+              - column:
+                  name: status
+                  type: varchar(255)
+              - column:
+                  name: treatment
+                  type: varchar(255)
+              - column:
+                  name: additional_info
+                  type: varchar(255)
+              - column:
+                  name: resolved_date
+                  type: date
+              - column:
+                  name: is_contagious
+                  type: boolean
+              - column:
+                  name: created_at
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamp
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: cat_disease
+            baseColumnNames: cat_id
+            referencedTableName: cat
+            referencedColumnNames: id
+            constraintName: fk_cat_disease_cat
+            onDelete: CASCADE
+
+  - changeSet:
+      id: 11
+      author: szyman90
+      changes:
+        - createTable:
+            tableName: clinic
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+
+              - column:
+                  name: place_name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: address_street
+                  type: varchar(255)
+
+              - column:
+                  name: address_city
+                  type: varchar(255)
+
+              - column:
+                  name: address_postal_code
+                  type: varchar(50)
+
+              - column:
+                  name: address_country
+                  type: varchar(255)
+
+              - column:
+                  name: email
+                  type: varchar(255)
+
+              - column:
+                  name: number
+                  type: varchar(50)
+
+              - column:
+                  name: app_registration
+                  type: boolean
+
+              - column:
+                  name: created_at
+                  type: timestamp
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: updated_at
+                  type: timestamp
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 12
       author: szyman90
       changes:
         - createTable:
@@ -47,39 +438,47 @@ databaseChangeLog:
                   constraints:
                     primaryKey: true
                     nullable: false
+
               - column:
                   name: name
-                  type: VARCHAR(255)
+                  type: varchar(255)
+
               - column:
-                  name: address
-                  type: VARCHAR(255)
+                  name: surname
+                  type: varchar(255)
+
+              - column:
+                  name: clinic_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: created_at
+                  type: timestamp
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: updated_at
+                  type: timestamp
+                  constraints:
+                    nullable: false
+
+        - addForeignKeyConstraint:
+            baseTableName: vet
+            baseColumnNames: clinic_id
+            referencedTableName: clinic
+            referencedColumnNames: id
+            constraintName: fk_vet_clinic
+            onDelete: CASCADE
 
   - changeSet:
-      id: 3
+      id: 13
       author: szyman90
       changes:
         - createTable:
-            tableName: cat_vets
-            columns:
-              - column:
-                  name: cat_id
-                  type: UUID
-                  constraints:
-                    foreignKeyName: fk_cat_vets_cat
-                    references: cat(id)
-              - column:
-                  name: vet_id
-                  type: UUID
-                  constraints:
-                    foreignKeyName: fk_cat_vets_vet
-                    references: vet(id)
-
-  - changeSet:
-      id: 4
-      author: szyman90
-      changes:
-        - createTable:
-            tableName: vaccination
+            tableName: medical_record
             columns:
               - column:
                   name: id
@@ -87,25 +486,71 @@ databaseChangeLog:
                   constraints:
                     primaryKey: true
                     nullable: false
+
               - column:
                   name: cat_id
                   type: UUID
                   constraints:
-                    foreignKeyName: fk_vaccination_cat
-                    references: cat(id)
                     nullable: false
+
               - column:
-                  name: name
-                  type: VARCHAR(255)
+                  name: clinic_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+
               - column:
-                  name: type
-                  type: VARCHAR(255)
+                  name: vet_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: test_type
+                  type: varchar(255)
+
               - column:
                   name: date
-                  type: DATE
+                  type: date
+
+              - column:
+                  name: result_text
+                  type: varchar(255)
+
+              - column:
+                  name: result_image
+                  type: bytea
+
+              - column:
+                  name: treatment_note
+                  type: varchar(255)
+
+        - addForeignKeyConstraint:
+            baseTableName: medical_record
+            baseColumnNames: cat_id
+            referencedTableName: cat
+            referencedColumnNames: id
+            constraintName: fk_medical_record_cat
+            onDelete: CASCADE
+
+        - addForeignKeyConstraint:
+            baseTableName: medical_record
+            baseColumnNames: clinic_id
+            referencedTableName: clinic
+            referencedColumnNames: id
+            constraintName: fk_medical_record_clinic
+            onDelete: CASCADE
+
+        - addForeignKeyConstraint:
+            baseTableName: medical_record
+            baseColumnNames: vet_id
+            referencedTableName: vet
+            referencedColumnNames: id
+            constraintName: fk_medical_record_vet
+            onDelete: CASCADE
 
   - changeSet:
-      id: 5
+      id: 14
       author: szyman90
       changes:
         - createTable:
@@ -117,21 +562,29 @@ databaseChangeLog:
                   constraints:
                     primaryKey: true
                     nullable: false
+
               - column:
                   name: name
-                  type: VARCHAR(255)
+                  type: varchar(255)
+
               - column:
                   name: description
-                  type: VARCHAR(255)
+                  type: varchar(255)
+
               - column:
                   name: medication_form
-                  type: VARCHAR(255)
+                  type: varchar(255)
+
               - column:
                   name: dosage_unit
-                  type: VARCHAR(255)
+                  type: varchar(255)
+
+              - column:
+                  name: additional_info
+                  type: varchar(255)
 
   - changeSet:
-      id: 6
+      id: 15
       author: szyman90
       changes:
         - createTable:
@@ -139,45 +592,66 @@ databaseChangeLog:
             columns:
               - column:
                   name: id
-                  type: BIGINT
+                  type: UUID
                   constraints:
                     primaryKey: true
                     nullable: false
+
               - column:
                   name: cat_id
                   type: UUID
                   constraints:
-                    foreignKeyName: fk_medical_recommendation_cat
-                    references: cat(id)
                     nullable: false
+
               - column:
                   name: medication_id
                   type: UUID
                   constraints:
-                    foreignKeyName: fk_medical_recommendation_med
-                    references: medication(id)
                     nullable: false
+
               - column:
                   name: dosage
-                  type: DOUBLE
+                  type: double precision
+
               - column:
                   name: start_date
-                  type: DATE
+                  type: date
+
               - column:
                   name: end_date
-                  type: DATE
+                  type: date
+
               - column:
                   name: frequency
-                  type: VARCHAR(255)
+                  type: varchar(255)
+
               - column:
-                  name: notes
-                  type: VARCHAR(255)
+                  name: additional_info
+                  type: varchar(255)
+
               - column:
                   name: active
-                  type: BOOLEAN
+                  type: boolean
+                  constraints:
+                    nullable: false
 
+        - addForeignKeyConstraint:
+            baseTableName: medical_recommendation
+            baseColumnNames: cat_id
+            referencedTableName: cat
+            referencedColumnNames: id
+            constraintName: fk_medrec_cat
+            onDelete: CASCADE
+
+        - addForeignKeyConstraint:
+            baseTableName: medical_recommendation
+            baseColumnNames: medication_id
+            referencedTableName: medication
+            referencedColumnNames: id
+            constraintName: fk_medrec_medication
+            onDelete: CASCADE
   - changeSet:
-      id: 7
+      id: 16
       author: szyman90
       changes:
         - createTable:
@@ -189,29 +663,34 @@ databaseChangeLog:
                   constraints:
                     primaryKey: true
                     nullable: false
+
               - column:
                   name: cat_id
                   type: UUID
                   constraints:
-                    foreignKeyName: fk_cat_tests_cat
-                    references: cat(id)
+                    nullable: false
+
               - column:
                   name: test_type
-                  type: VARCHAR(255)
-                  constraints:
-                    nullable: false
+                  type: varchar(255)
+
               - column:
                   name: result
-                  type: VARCHAR(255)
-                  constraints:
-                    nullable: false
+                  type: varchar(255)
+        - addForeignKeyConstraint:
+            baseTableName: cat_tests
+            baseColumnNames: cat_id
+            referencedTableName: cat
+            referencedColumnNames: id
+            constraintName: fk_cat_tests_cat
+            onDelete: SET NULL
 
   - changeSet:
-      id: 8
+      id: 17
       author: szyman90
       changes:
         - createTable:
-            tableName: role
+            tableName: roles
             columns:
               - column:
                   name: id
@@ -219,19 +698,20 @@ databaseChangeLog:
                   constraints:
                     primaryKey: true
                     nullable: false
+
               - column:
                   name: role_type
-                  type: VARCHAR(255)
+                  type: varchar(255)
                   constraints:
-                    unique: true
                     nullable: false
+                    unique: true
 
   - changeSet:
-      id: 9
+      id: 18
       author: szyman90
       changes:
         - createTable:
-            tableName: app_user
+            tableName: users
             columns:
               - column:
                   name: id
@@ -239,20 +719,22 @@ databaseChangeLog:
                   constraints:
                     primaryKey: true
                     nullable: false
+
               - column:
                   name: username
-                  type: VARCHAR(255)
+                  type: varchar(255)
                   constraints:
-                    unique: true
                     nullable: false
+                    unique: true
+
               - column:
                   name: password
-                  type: VARCHAR(255)
+                  type: varchar(255)
                   constraints:
                     nullable: false
 
   - changeSet:
-      id: 10
+      id: 19
       author: szyman90
       changes:
         - createTable:
@@ -262,41 +744,39 @@ databaseChangeLog:
                   name: user_id
                   type: UUID
                   constraints:
-                    foreignKeyName: fk_user_roles_user
-                    references: app_user(id)
-              - column:
-                  name: role_id
-                  type: UUID
-                  constraints:
-                    foreignKeyName: fk_user_roles_role
-                    references: role(id)
-
-  - changeSet:
-      id: 11
-      author: szyman90
-      changes:
-        - createTable:
-            tableName: shift_task
-            columns:
-              - column:
-                  name: id
-                  type: UUID
-                  constraints:
-                    primaryKey: true
                     nullable: false
               - column:
-                  name: name
-                  type: VARCHAR(255)
-              - column:
-                  name: required
-                  type: BOOLEAN
+                  name: roles_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+
+        - addPrimaryKey:
+            columnNames: user_id, roles_id
+            tableName: user_roles
+
+        - addForeignKeyConstraint:
+            baseTableName: user_roles
+            baseColumnNames: user_id
+            referencedTableName: users
+            referencedColumnNames: id
+            constraintName: fk_userroles_user
+            onDelete: CASCADE
+
+        - addForeignKeyConstraint:
+            baseTableName: user_roles
+            baseColumnNames: roles_id
+            referencedTableName: roles
+            referencedColumnNames: id
+            constraintName: fk_userroles_roles
+            onDelete: CASCADE
 
   - changeSet:
-      id: 12
+      id: 20
       author: szyman90
       changes:
         - createTable:
-            tableName: shift
+            tableName: vaccination
             columns:
               - column:
                   name: id
@@ -305,30 +785,46 @@ databaseChangeLog:
                     primaryKey: true
                     nullable: false
 
-  - changeSet:
-      id: 13
-      author: szyman90
-      changes:
-        - createTable:
-            tableName: cat_shift_action
-            columns:
-              - column:
-                  name: id
-                  type: UUID
-                  constraints:
-                    primaryKey: true
-                    nullable: false
-              - column:
-                  name: shift_id
-                  type: UUID
-                  constraints:
-                    foreignKeyName: fk_cat_shift_shift
-                    references: shift(id)
-                    nullable: false
               - column:
                   name: cat_id
                   type: UUID
                   constraints:
-                    foreignKeyName: fk_cat_shift_cat
-                    references: cat(id)
+                    nullable: false
+
+              - column:
+                  name: name
+                  type: varchar(255)
+
+              - column:
+                  name: type
+                  type: varchar(255)
+
+              - column:
+                  name: date
+                  type: date
+
+        - addForeignKeyConstraint:
+            baseTableName: vaccination
+            baseColumnNames: cat_id
+            referencedTableName: cat
+            referencedColumnNames: id
+            constraintName: fk_vaccination_cat
+            onDelete: CASCADE
+
+  - changeSet:
+      id: 21
+      author: szyman90
+      changes:
+        - createTable:
+            tableName: cat_vets
+            columns:
+              - column:
+                  name: cat_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: vet_id
+                  type: UUID
+                  constraints:
                     nullable: false

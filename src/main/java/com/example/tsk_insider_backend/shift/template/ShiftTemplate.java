@@ -20,9 +20,9 @@ public class ShiftTemplate extends ShiftAbstract {
     @Column(nullable = false, name = "version")
     private int version;
 
-    @OneToMany(mappedBy = "shift_template", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "shiftTemplate", cascade = CascadeType.ALL)
     private List<BurrowTaskTemplate> burrowTasks;
 
-    @OneToMany(mappedBy = "shift_template", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "shiftTemplate", cascade = CascadeType.ALL)
     private List<ActionsPerCatTemplate> actionsPerCat;
 }

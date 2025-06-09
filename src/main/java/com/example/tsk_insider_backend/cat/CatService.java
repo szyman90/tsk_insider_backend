@@ -65,10 +65,10 @@ public class CatService {
         existingCat.setWeight(updatedCat.weight());
         existingCat.setCageNumber(updatedCat.cageNumber());
         existingCat.setTameness(updatedCat.tameness());
-        //existingCat.setVaccinated(updatedCat.isVaccinated()); TODO correct
+        existingCat.setVaccinations(updatedCat.vaccinations());
         existingCat.setNeutered(updatedCat.isNeutered());
         existingCat.setGender(updatedCat.gender());
-        existingCat.setVet(updatedCat.vet());
+        existingCat.setVets(updatedCat.vets());
 
         catRepository.save(existingCat);
     }
@@ -95,7 +95,7 @@ public class CatService {
         Vet vet = vetRepository.findById(vetId)
                 .orElseThrow(() -> new EntityNotFoundException("Vet not found"));
 
-        cat.getVet().add(vet);
+        cat.getVets().add(vet);
         catRepository.save(cat);
     }
 
@@ -106,10 +106,10 @@ public class CatService {
         cat.setTameness(catDTO.tameness());
         cat.setCageNumber(catDTO.cageNumber());
         cat.setGender(catDTO.gender());
-//        cat.setVaccinated(catDTO.isVaccinated());  TODO correct
+        cat.setVaccinations(catDTO.vaccinations());
         cat.setNeutered(catDTO.isNeutered());
         cat.setWeight(catDTO.weight());
-        cat.setVet(catDTO.vet());
+        cat.setVets(catDTO.vets());
         return cat;
     }
 }
