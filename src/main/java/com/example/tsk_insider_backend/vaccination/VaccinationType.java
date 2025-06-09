@@ -5,5 +5,5 @@ public enum VaccinationType {
     RCP,
     FELV,
     CHLAMYDIA,
-    BORDETELLA //TODO czy ma znaczenie firma
+    BORDETELLA
 }

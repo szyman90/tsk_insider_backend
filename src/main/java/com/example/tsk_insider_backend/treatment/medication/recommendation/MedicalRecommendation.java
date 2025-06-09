@@ -7,11 +7,11 @@ import com.example.tsk_insider_backend.cat.Cat;
 import com.example.tsk_insider_backend.treatment.medication.Medication;
 import com.example.tsk_insider_backend.treatment.medication.MedicationFrequency;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
@@ -47,7 +47,8 @@ public class MedicalRecommendation {
     @Enumerated(EnumType.STRING)
     private MedicationFrequency frequency;
 
-    private String notes;
+    @Column(name="additional_info")
+    private String additionalInfo;
 
     private boolean active;
 }

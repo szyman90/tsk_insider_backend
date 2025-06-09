@@ -16,7 +16,7 @@ public class CatTests {
     private UUID id;
 
     @ManyToOne
-    @JoinColumn(name = "cat_id")
+    @JoinColumn(name = "cat_id", nullable = false)
     private Cat cat;
 
     @Column(name = "test_type")

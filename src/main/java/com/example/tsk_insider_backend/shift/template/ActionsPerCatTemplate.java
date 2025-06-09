@@ -18,7 +18,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Entity(name = "action_per_cat_template")
+@Entity(name = "actions_per_cat_template")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -37,6 +37,6 @@ public class ActionsPerCatTemplate {
     @JoinColumn(name = "cat_id")
     private Cat cat;
 
-    @OneToMany(mappedBy = "action_per_cat_template", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "actionsPerCatTemplate", cascade = CascadeType.ALL)
     private List<CatTaskTemplate> catTasks;
 }

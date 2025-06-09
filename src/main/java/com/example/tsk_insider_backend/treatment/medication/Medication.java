@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "medicination")
+@Table(name = "medication")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -36,7 +36,7 @@ public class Medication {
     @Enumerated(EnumType.STRING)
     private DosageUnit dosageUnit;
 
-    @Column(name = "additional_notes")
-    private String additionalNotes;
+    @Column(name = "additional_info")
+    private String additionalInfo;
 
 }

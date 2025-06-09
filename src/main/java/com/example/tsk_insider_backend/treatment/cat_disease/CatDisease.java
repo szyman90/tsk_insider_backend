@@ -1,12 +1,10 @@
-package com.example.tsk_insider_backend.treatment.medical_record;
+package com.example.tsk_insider_backend.treatment.cat_disease;
 
 import java.time.LocalDate;
 import java.util.UUID;
 
 import com.example.tsk_insider_backend.cat.Cat;
-import com.example.tsk_insider_backend.treatment.test.TestType;
-import com.example.tsk_insider_backend.vet.Clinic;
-import com.example.tsk_insider_backend.vet.Vet;
+import com.example.tsk_insider_backend.common.Auditable;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -15,44 +13,45 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Entity(name = "medical_record")
+@Entity
+@Table(name = "cat_disease")
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
-public class MedicalRecord {
+@AllArgsConstructor
+public class CatDisease extends Auditable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @ManyToOne(optional = false)
+    @JoinColumn(name = "cat_id")
     private Cat cat;
 
-    @ManyToOne(optional = false)
-    private Clinic clinic;
+    @Column(nullable = false)
+    private String name;
 
-    @ManyToOne(optional = false)
-    private Vet vet;
+    private LocalDate diagnosisDate;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "test_type")
-    private TestType testType;
+    private DiseaseStatus status;
 
-    private LocalDate date;
+    private String treatment;
 
-    @Column(name = "result_text")
-    private String resultText;
+    @Column(name="additional_info")
+    private String additionalInfo;
 
-    @Column(name = "result_image")
-    private byte[] resultImage;
+    private LocalDate resolvedDate;
 
-    @Column(name = "treatment_note")
-    private String treatmentNote;
+    private Boolean isContagious;
 
 }

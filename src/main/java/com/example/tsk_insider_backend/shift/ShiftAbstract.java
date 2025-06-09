@@ -1,9 +1,9 @@
 package com.example.tsk_insider_backend.shift;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
 
-import jakarta.persistence.Column;
+import com.example.tsk_insider_backend.common.Auditable;
+
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -14,12 +14,9 @@ import lombok.Setter;
 @Getter
 @Setter
 @MappedSuperclass
-public class ShiftAbstract {
+public abstract class ShiftAbstract extends Auditable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-
-    @Column(nullable = false, name = "created_at")
-    private LocalDateTime createdAt;
 }

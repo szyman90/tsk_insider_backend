@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import com.example.tsk_insider_backend.common.Address;
+import com.example.tsk_insider_backend.common.Auditable;
 import com.example.tsk_insider_backend.common.PhoneNumber;
 
 import jakarta.persistence.CascadeType;
@@ -25,7 +26,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Clinic {
+public class Clinic extends Auditable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

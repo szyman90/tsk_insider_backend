@@ -6,6 +6,8 @@ import lombok.*;
 import java.util.List;
 import java.util.UUID;
 
+import com.example.tsk_insider_backend.common.Auditable;
+import com.example.tsk_insider_backend.treatment.cat_disease.CatDisease;
 import com.example.tsk_insider_backend.treatment.medical_record.MedicalRecord;
 import com.example.tsk_insider_backend.treatment.medication.recommendation.MedicalRecommendation;
 import com.example.tsk_insider_backend.vaccination.Vaccination;
@@ -14,7 +16,7 @@ import com.example.tsk_insider_backend.vet.Vet;
 @Entity
 @Table(name = "cat")
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor
-public class Cat {
+public class Cat extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
@@ -27,7 +29,7 @@ public class Cat {
 
     private String chipNumber; //TODO zapytać skąd zamawiamy chipy. Ewentualne dodatkowe zapytanie przy prefixie
 
-    private Marking marking;
+    private String marking;
 
     @Column(name = "cage_number")
     private Integer cageNumber;
@@ -51,13 +53,14 @@ public class Cat {
     private List<Vet> vets;
 
     @OneToMany(mappedBy = "cat", cascade = CascadeType.ALL)
-    private List<MedicalRecord> medicalRecords; //TODO kiedy jedzie i gdzie
+    private List<MedicalRecord> medicalRecords;
+
+    @OneToMany(mappedBy = "cat", cascade = CascadeType.ALL)
+    private List<CatDisease> catDiseases;
 
     @OneToMany(mappedBy = "cat", cascade = CascadeType.ALL)
     private List<MedicalRecommendation> medicalRecommendations;
 
-    @Column(name = "additional_notes")
-    private String additionalNotes;
-
-    //TODO osobne pole na choroby?
+    @Column(name = "additional_info")
+    private String additionalInfo;
 }
