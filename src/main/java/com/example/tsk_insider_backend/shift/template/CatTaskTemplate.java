@@ -16,6 +16,6 @@ import lombok.Setter;
 public class CatTaskTemplate extends TaskTemplateAbstract {
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "action_per_cat_template_id")
+    @JoinColumn(name = "actions_per_cat_template_id")
     private ActionsPerCatTemplate actionsPerCatTemplate;
 }

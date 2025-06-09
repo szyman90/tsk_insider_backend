@@ -11,12 +11,10 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import com.example.tsk_insider_backend.user.UserDetailsServiceImpl;
 
 import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.validation.constraints.NotNull;
 
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter {
