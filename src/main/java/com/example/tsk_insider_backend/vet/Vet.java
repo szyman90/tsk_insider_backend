@@ -5,6 +5,7 @@ import lombok.*;
 
 import java.util.UUID;
 
+import com.example.tsk_insider_backend.clinic.Clinic;
 import com.example.tsk_insider_backend.common.Auditable;
 
 @Entity

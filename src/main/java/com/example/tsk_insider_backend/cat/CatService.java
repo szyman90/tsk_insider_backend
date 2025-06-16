@@ -99,6 +99,34 @@ public class CatService {
         catRepository.save(cat);
     }
 
+    public void assignCageToCat(UUID catId, Integer cageNumber) {
+        validateCageNumber(cageNumber);
+
+        Cat cat = catRepository.findById(catId)
+                .orElseThrow(() -> new EntityNotFoundException(CAT_NOT_FOUND));
+
+        cat.setCageNumber(cageNumber);
+        catRepository.save(cat);
+    }
+
+    public void removeCatFromBurrow(UUID catId) {
+        Cat cat = catRepository.findById(catId)
+                .orElseThrow(() -> new EntityNotFoundException(CAT_NOT_FOUND));
+
+        if(cat.getCageNumber() == null) {
+            throw new IllegalArgumentException("Ten kot nie jest w norze.");
+        }
+        cat.setCatDiseases(null);
+        catRepository.save(cat);
+    }
+
+    private void validateCageNumber(Integer cageNumber) {
+        List<Cat> catsInBurrow = catRepository.findByCageNumberIsNotNull();
+        if (catsInBurrow.stream().anyMatch(cat -> cageNumber.equals(cat.getCageNumber()))) {
+            throw new IllegalArgumentException("W klatce nr: " + cageNumber + " już jest kot.");
+        }
+    }
+
     private Cat createDTOtoEntity(CatCreateDTO catDTO) {
         Cat cat = new Cat();
         cat.setName(catDTO.name());

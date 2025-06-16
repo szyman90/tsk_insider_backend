@@ -19,16 +19,14 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 
 @RestController
 @RequestMapping("/cats")
+@AllArgsConstructor
 @PreAuthorize("hasAnyRole('VOLUNTEER', 'BURROW_KEEPER', 'MANAGEMENT', 'ADMIN')")
 public class CatController {
     private final CatService catService;
-
-    public CatController(CatService catService) {
-        this.catService = catService;
-    }
 
     @GetMapping
     public ResponseEntity<List<CatReadDTO>> getAllCats() {
@@ -59,7 +57,7 @@ public class CatController {
 
     @PreAuthorize("hasAnyRole('BURROW_KEEPER', 'MANAGEMENT', 'ADMIN')")
     @PutMapping("/{id}")
-    public ResponseEntity<Cat> updateCat(@PathVariable UUID id, @RequestBody @Valid CatUpdateDTO cat, Authentication authentication) {
+    public ResponseEntity<Void> updateCat(@PathVariable UUID id, @RequestBody @Valid CatUpdateDTO cat, Authentication authentication) {
         catService.updateCat(id, cat, authentication);
         return ResponseEntity.noContent().build();
     }
@@ -68,6 +66,22 @@ public class CatController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCat(@PathVariable UUID id, Authentication authentication) {
         catService.deleteCat(id, authentication);
+        return ResponseEntity.noContent()
+                .build();
+    }
+
+    @PreAuthorize("hasAnyRole('BURROW_KEEPER', 'MANAGEMENT', 'ADMIN')")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> addToBurrow(@PathVariable UUID id, @RequestBody @Valid Integer cageNumber) {
+        catService.assignCageToCat(id, cageNumber);
+        return ResponseEntity.noContent()
+                .build();
+    }
+
+    @PreAuthorize("hasAnyRole('BURROW_KEEPER', 'MANAGEMENT', 'ADMIN')")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> removeFromBurrow(@PathVariable UUID id) {
+        catService.removeCatFromBurrow(id);
         return ResponseEntity.noContent()
                 .build();
     }

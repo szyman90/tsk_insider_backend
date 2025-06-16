@@ -1,4 +1,4 @@
-package com.example.tsk_insider_backend.vet;
+package com.example.tsk_insider_backend.clinic;
 
 import java.util.List;
 import java.util.UUID;
@@ -6,6 +6,7 @@ import java.util.UUID;
 import com.example.tsk_insider_backend.common.Address;
 import com.example.tsk_insider_backend.common.Auditable;
 import com.example.tsk_insider_backend.common.PhoneNumber;
+import com.example.tsk_insider_backend.vet.Vet;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;

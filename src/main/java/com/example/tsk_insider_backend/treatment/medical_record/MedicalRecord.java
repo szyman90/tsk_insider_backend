@@ -5,7 +5,7 @@ import java.util.UUID;
 
 import com.example.tsk_insider_backend.cat.Cat;
 import com.example.tsk_insider_backend.treatment.test.TestType;
-import com.example.tsk_insider_backend.vet.Clinic;
+import com.example.tsk_insider_backend.clinic.Clinic;
 import com.example.tsk_insider_backend.vet.Vet;
 
 import jakarta.persistence.Column;
