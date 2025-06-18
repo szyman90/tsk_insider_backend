@@ -1,4 +1,4 @@
-package com.example.tsk_insider_backend.treatment.cat_disease;
+package com.example.tsk_insider_backend.cat.cat_disease;
 
 import java.time.LocalDate;
 import java.util.UUID;

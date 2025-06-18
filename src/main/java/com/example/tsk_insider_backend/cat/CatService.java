@@ -1,12 +1,13 @@
 package com.example.tsk_insider_backend.cat;
 
-import static com.example.tsk_insider_backend.user.RoleVerificationUtil.CAT_NOT_FROM_BURROW;
 import static com.example.tsk_insider_backend.user.RoleVerificationUtil.isBurrowKeeper;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -15,20 +16,17 @@ import com.example.tsk_insider_backend.vet.Vet;
 import com.example.tsk_insider_backend.vet.VetRepository;
 
 import jakarta.persistence.EntityNotFoundException;
+import lombok.AllArgsConstructor;
 
 @Service
+@AllArgsConstructor
 public class CatService {
-
-    public static final String CAT_NOT_FOUND = "Cat not found";
 
     private final CatRepository catRepository;
 
     private final VetRepository vetRepository;
 
-    public CatService(CatRepository catRepository, VetRepository vetRepository) {
-        this.catRepository = catRepository;
-        this.vetRepository = vetRepository;
-    }
+    private final MessageSource messageSource;
 
     public List<CatReadDTO> getAllCats() {
         return catRepository.findAll().stream()
@@ -46,19 +44,14 @@ public class CatService {
 
     public Cat createCat(CatCreateDTO catDTO, Authentication authentication) {
         if (isBurrowKeeper(authentication) && catDTO.cageNumber() == null) {
-            throw new AccessDeniedException(CAT_NOT_FROM_BURROW);
+            throw new AccessDeniedException(messageSource.getMessage("burrow.keeper.not.allowed", new Object[]{}, LocaleContextHolder.getLocale()));
         }
         Cat dtOtoEntity = createDTOtoEntity(catDTO);
         return catRepository.save(dtOtoEntity);
     }
 
     public void updateCat(UUID id, CatUpdateDTO updatedCat, Authentication authentication) {
-        Cat existingCat = catRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(CAT_NOT_FOUND));
-
-        if (isBurrowKeeper(authentication) && existingCat.getCageNumber() == null) {
-            throw new AccessDeniedException(CAT_NOT_FROM_BURROW);
-        }
+        Cat existingCat = iDontHaveNameYet(id, authentication);
 
         existingCat.setName(updatedCat.name());
         existingCat.setAge(updatedCat.age());
@@ -74,47 +67,47 @@ public class CatService {
     }
 
     public void deleteCat(UUID id, Authentication authentication) {
-        Cat cat = catRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(CAT_NOT_FOUND));
+        Cat cat = iDontHaveNameYet(id, authentication);
 
-        if (isBurrowKeeper(authentication) && cat.getCageNumber() == null) {
-            throw new AccessDeniedException(CAT_NOT_FROM_BURROW);
-        }
-
-        catRepository.deleteById(id);
+        catRepository.delete(cat);
     }
 
     public void addVet(UUID catId, UUID vetId, Authentication authentication) {
-        Cat cat = catRepository.findById(catId)
-                .orElseThrow(() -> new EntityNotFoundException(CAT_NOT_FOUND));
-
-        if ( isBurrowKeeper(authentication) && cat.getCageNumber() == null ) {
-            throw new AccessDeniedException(CAT_NOT_FROM_BURROW);
-        }
+        Cat cat = iDontHaveNameYet(catId, authentication);
 
         Vet vet = vetRepository.findById(vetId)
-                .orElseThrow(() -> new EntityNotFoundException("Vet not found"));
+                .orElseThrow(() -> new EntityNotFoundException(messageSource.getMessage("vet.not.found", new Object[]{vetId}, LocaleContextHolder.getLocale())));
 
         cat.getVets().add(vet);
         catRepository.save(cat);
     }
 
-    public void assignCageToCat(UUID catId, Integer cageNumber) {
+    private Cat iDontHaveNameYet(UUID id, Authentication authentication) { //TODO names
+        Cat cat = catRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(messageSource.getMessage("cat.not.found", new Object[]{id}, LocaleContextHolder.getLocale())));
+
+        if ( isBurrowKeeper(authentication) && cat.getCageNumber() == null ) {
+            throw new AccessDeniedException(messageSource.getMessage("burrow.keeper.not.allowed", new Object[]{}, LocaleContextHolder.getLocale())); //TODO name kodu
+        }
+        return cat;
+    }
+
+    public void assignCageToCat(UUID id, Integer cageNumber) {
         validateCageNumber(cageNumber);
 
-        Cat cat = catRepository.findById(catId)
-                .orElseThrow(() -> new EntityNotFoundException(CAT_NOT_FOUND));
+        Cat cat = catRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(messageSource.getMessage("cat.not.found", new Object[]{id}, LocaleContextHolder.getLocale())));
 
         cat.setCageNumber(cageNumber);
         catRepository.save(cat);
     }
 
-    public void removeCatFromBurrow(UUID catId) {
-        Cat cat = catRepository.findById(catId)
-                .orElseThrow(() -> new EntityNotFoundException(CAT_NOT_FOUND));
+    public void removeCatFromBurrow(UUID id) {
+        Cat cat = catRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(messageSource.getMessage("cat.not.found", new Object[]{id}, LocaleContextHolder.getLocale())));
 
         if(cat.getCageNumber() == null) {
-            throw new IllegalArgumentException("Ten kot nie jest w norze.");
+            throw new IllegalArgumentException(messageSource.getMessage("cat.not.found.burrow", new Object[]{cat.getName()}, LocaleContextHolder.getLocale()));
         }
         cat.setCatDiseases(null);
         catRepository.save(cat);
@@ -123,7 +116,7 @@ public class CatService {
     private void validateCageNumber(Integer cageNumber) {
         List<Cat> catsInBurrow = catRepository.findByCageNumberIsNotNull();
         if (catsInBurrow.stream().anyMatch(cat -> cageNumber.equals(cat.getCageNumber()))) {
-            throw new IllegalArgumentException("W klatce nr: " + cageNumber + " już jest kot.");
+            throw new IllegalArgumentException(messageSource.getMessage("cage.already.full", new Object[]{cageNumber}, LocaleContextHolder.getLocale()));
         }
     }
 

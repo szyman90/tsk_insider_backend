@@ -1,4 +1,4 @@
-package com.example.tsk_insider_backend.treatment.cat_disease;
+package com.example.tsk_insider_backend.cat.cat_disease;
 
 public enum DiseaseStatus {
     ACTIVE,

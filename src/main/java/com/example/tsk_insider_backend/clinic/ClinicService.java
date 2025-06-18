@@ -1,25 +1,21 @@
 package com.example.tsk_insider_backend.clinic;
 
-import java.util.List;
 import java.util.UUID;
 
-import org.apache.coyote.BadRequestException;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 
-import com.example.tsk_insider_backend.vet.Vet;
-import com.example.tsk_insider_backend.vet.VetRepository;
-
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 
 @Service
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class ClinicService {
 
     private final ClinicRepository clinicRepository;
 
-    private final VetRepository vetRepository;
+    private final MessageSource messageSource;
 
     public Clinic createClinic(ClinicCreateDTO clinicCreateDTO) {
         Clinic dtOtoEntity = createDTOtoEntity(clinicCreateDTO);
@@ -28,7 +24,7 @@ public class ClinicService {
 
     public void updateClinic(UUID id, ClinicUpdateDTO clinicUpdateDTO) {
         Clinic clinic = clinicRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Clinic not found"));
+                .orElseThrow(() ->new EntityNotFoundException(messageSource.getMessage("clinic.not.found", new Object[]{id}, LocaleContextHolder.getLocale())));
 
         clinic.setPlaceName(clinicUpdateDTO.placeName());
         clinic.setAddress(clinicUpdateDTO.address());
@@ -42,25 +38,9 @@ public class ClinicService {
 
     public void deleteClinic(UUID id) {
         if (!clinicRepository.existsById(id)) {
-            throw new EntityNotFoundException("Clinic not found");
+            throw new EntityNotFoundException(messageSource.getMessage("clinic.not.found", new Object[]{id}, LocaleContextHolder.getLocale()));
         }
         clinicRepository.deleteById(id);
-    }
-
-    @Transactional
-    public void updateClinicVets(UUID clinicId, List<UUID> vetIds) throws BadRequestException {
-        Clinic clinic = clinicRepository.findById(clinicId)
-                .orElseThrow(() -> new EntityNotFoundException("Clinic not found"));
-
-        List<Vet> vets = vetRepository.findAllById(vetIds);
-
-        if (vets.size() != vetIds.size()) {
-            throw new BadRequestException("One or more vets not found");
-        }
-
-        clinic.setVets(vets);
-
-        clinicRepository.save(clinic);
     }
 
     private Clinic createDTOtoEntity(ClinicCreateDTO clinicCreateDTO) {

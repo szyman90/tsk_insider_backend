@@ -44,8 +44,8 @@ public class CatController {
 
     @PreAuthorize("hasAnyRole('BURROW_KEEPER', 'MANAGEMENT', 'ADMIN')")
     @PostMapping
-    public ResponseEntity<CatReadDTO> createCat(@RequestBody CatCreateDTO catDTO, Authentication authentication) {
-        Cat cat = catService.createCat(catDTO, authentication);
+    public ResponseEntity<CatReadDTO> createCat(@RequestBody CatCreateDTO catCreateDTO, Authentication authentication) {
+        Cat cat = catService.createCat(catCreateDTO, authentication);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
                 .buildAndExpand(cat.getId())
@@ -79,7 +79,7 @@ public class CatController {
     }
 
     @PreAuthorize("hasAnyRole('BURROW_KEEPER', 'MANAGEMENT', 'ADMIN')")
-    @DeleteMapping("/{id}")
+    @PatchMapping("/{id}/burrow")
     public ResponseEntity<Void> removeFromBurrow(@PathVariable UUID id) {
         catService.removeCatFromBurrow(id);
         return ResponseEntity.noContent()
