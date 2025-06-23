@@ -1,5 +1,6 @@
 package com.example.tsk_insider_backend.vet;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.context.MessageSource;
@@ -21,6 +22,12 @@ public class VetService {
     private final ClinicRepository clinicRepository;
 
     private final MessageSource messageSource;
+
+    public List<VetReadDTO> getAllVets() {
+        return vetRepository.findAll().stream()
+                .map(VetReadDTO::from)
+                .toList();
+    }
 
     public Vet createVet(VetCreateDTO vetCreateDTO) {
         UUID clinicId = vetCreateDTO.clinicId();

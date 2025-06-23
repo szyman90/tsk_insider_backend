@@ -1,11 +1,13 @@
 package com.example.tsk_insider_backend.clinic;
 
 import java.net.URI;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -13,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import com.example.tsk_insider_backend.vet.VetReadDTO;
 
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -53,5 +57,9 @@ public class ClinicController {
                 .build();
     }
 
-    //TODO walidacja rekordów Create tu i w Cat, zamienić w rekordach na readDTO w parametrach, po skończeniu podstawowych kontrolerów stworzyć testy
+    @GetMapping("/{id}/vets")
+    public ResponseEntity<List<VetReadDTO>> getVets(@PathVariable UUID id) {
+        return ResponseEntity.ok(clinicService.getVets(id));
+    }
+
 }

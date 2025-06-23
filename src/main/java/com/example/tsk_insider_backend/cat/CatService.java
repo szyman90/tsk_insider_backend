@@ -44,14 +44,14 @@ public class CatService {
 
     public Cat createCat(CatCreateDTO catDTO, Authentication authentication) {
         if (isBurrowKeeper(authentication) && catDTO.cageNumber() == null) {
-            throw new AccessDeniedException(messageSource.getMessage("burrow.keeper.not.allowed", new Object[]{}, LocaleContextHolder.getLocale()));
+            throw new AccessDeniedException(messageSource.getMessage("burrow.keeper.cat.restriction", new Object[]{}, LocaleContextHolder.getLocale()));
         }
         Cat dtOtoEntity = createDTOtoEntity(catDTO);
         return catRepository.save(dtOtoEntity);
     }
 
     public void updateCat(UUID id, CatUpdateDTO updatedCat, Authentication authentication) {
-        Cat existingCat = iDontHaveNameYet(id, authentication);
+        Cat existingCat = findCatWithAccessCheck(id, authentication);
 
         existingCat.setName(updatedCat.name());
         existingCat.setAge(updatedCat.age());
@@ -67,13 +67,13 @@ public class CatService {
     }
 
     public void deleteCat(UUID id, Authentication authentication) {
-        Cat cat = iDontHaveNameYet(id, authentication);
+        Cat cat = findCatWithAccessCheck(id, authentication);
 
         catRepository.delete(cat);
     }
 
     public void addVet(UUID catId, UUID vetId, Authentication authentication) {
-        Cat cat = iDontHaveNameYet(catId, authentication);
+        Cat cat = findCatWithAccessCheck(catId, authentication);
 
         Vet vet = vetRepository.findById(vetId)
                 .orElseThrow(() -> new EntityNotFoundException(messageSource.getMessage("vet.not.found", new Object[]{vetId}, LocaleContextHolder.getLocale())));
@@ -82,12 +82,12 @@ public class CatService {
         catRepository.save(cat);
     }
 
-    private Cat iDontHaveNameYet(UUID id, Authentication authentication) { //TODO names
+    private Cat findCatWithAccessCheck(UUID id, Authentication authentication) {
         Cat cat = catRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(messageSource.getMessage("cat.not.found", new Object[]{id}, LocaleContextHolder.getLocale())));
 
         if ( isBurrowKeeper(authentication) && cat.getCageNumber() == null ) {
-            throw new AccessDeniedException(messageSource.getMessage("burrow.keeper.not.allowed", new Object[]{}, LocaleContextHolder.getLocale())); //TODO name kodu
+            throw new AccessDeniedException(messageSource.getMessage("burrow.keeper.cat.restriction", new Object[]{}, LocaleContextHolder.getLocale()));
         }
         return cat;
     }

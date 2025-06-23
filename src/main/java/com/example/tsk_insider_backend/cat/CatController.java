@@ -71,7 +71,7 @@ public class CatController {
     }
 
     @PreAuthorize("hasAnyRole('BURROW_KEEPER', 'MANAGEMENT', 'ADMIN')")
-    @DeleteMapping("/{id}")
+    @PatchMapping("/{id}/burrow/add")
     public ResponseEntity<Void> addToBurrow(@PathVariable UUID id, @RequestBody @Valid Integer cageNumber) {
         catService.assignCageToCat(id, cageNumber);
         return ResponseEntity.noContent()
@@ -79,7 +79,7 @@ public class CatController {
     }
 
     @PreAuthorize("hasAnyRole('BURROW_KEEPER', 'MANAGEMENT', 'ADMIN')")
-    @PatchMapping("/{id}/burrow")
+    @PatchMapping("/{id}/burrow/remove")
     public ResponseEntity<Void> removeFromBurrow(@PathVariable UUID id) {
         catService.removeCatFromBurrow(id);
         return ResponseEntity.noContent()

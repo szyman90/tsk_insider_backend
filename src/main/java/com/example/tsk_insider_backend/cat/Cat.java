@@ -6,8 +6,8 @@ import lombok.*;
 import java.util.List;
 import java.util.UUID;
 
+import com.example.tsk_insider_backend.cat.cat_disease.CatDisease;
 import com.example.tsk_insider_backend.common.Auditable;
-import com.example.tsk_insider_backend.treatment.cat_disease.CatDisease;
 import com.example.tsk_insider_backend.treatment.medical_record.MedicalRecord;
 import com.example.tsk_insider_backend.treatment.medication.recommendation.MedicalRecommendation;
 import com.example.tsk_insider_backend.vaccination.Vaccination;
@@ -27,7 +27,7 @@ public class Cat extends Auditable {
 
     private double weight;
 
-    private String chipNumber; //TODO zapytać skąd zamawiamy chipy. Ewentualne dodatkowe zapytanie przy prefixie
+    private String chipNumber;
 
     private String marking;
 
