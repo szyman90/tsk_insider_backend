@@ -44,7 +44,7 @@ public class CatController {
 
     @PreAuthorize("hasAnyRole('BURROW_KEEPER', 'MANAGEMENT', 'ADMIN')")
     @PostMapping
-    public ResponseEntity<CatReadDTO> createCat(@RequestBody CatCreateDTO catCreateDTO, Authentication authentication) {
+    public ResponseEntity<CatReadDTO> createCat(@Valid @RequestBody CatCreateDTO catCreateDTO, Authentication authentication) {
         Cat cat = catService.createCat(catCreateDTO, authentication);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")

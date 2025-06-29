@@ -12,6 +12,8 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import com.example.tsk_insider_backend.vaccination.Vaccination;
+import com.example.tsk_insider_backend.vaccination.VaccinationRepository;
 import com.example.tsk_insider_backend.vet.Vet;
 import com.example.tsk_insider_backend.vet.VetRepository;
 
@@ -25,6 +27,8 @@ public class CatService {
     private final CatRepository catRepository;
 
     private final VetRepository vetRepository;
+
+    private final VaccinationRepository vaccinationRepository;
 
     private final MessageSource messageSource;
 
@@ -58,10 +62,10 @@ public class CatService {
         existingCat.setWeight(updatedCat.weight());
         existingCat.setCageNumber(updatedCat.cageNumber());
         existingCat.setTameness(updatedCat.tameness());
-        existingCat.setVaccinations(updatedCat.vaccinations());
+        existingCat.setVaccinations(fetchAndValidateVaccinations(updatedCat.vaccinations()));
         existingCat.setNeutered(updatedCat.isNeutered());
         existingCat.setGender(updatedCat.gender());
-        existingCat.setVets(updatedCat.vets());
+        existingCat.setVets(fetchAndValidateVets(updatedCat.vets()));
 
         catRepository.save(existingCat);
     }
@@ -127,10 +131,26 @@ public class CatService {
         cat.setTameness(catDTO.tameness());
         cat.setCageNumber(catDTO.cageNumber());
         cat.setGender(catDTO.gender());
-        cat.setVaccinations(catDTO.vaccinations());
+        cat.setVaccinations(catDTO.vaccinations()); //TODO
         cat.setNeutered(catDTO.isNeutered());
         cat.setWeight(catDTO.weight());
-        cat.setVets(catDTO.vets());
+        cat.setVets(fetchAndValidateVets(catDTO.vets()));
         return cat;
+    }
+
+    private List<Vet> fetchAndValidateVets(List<UUID> vetIds) {
+        List<Vet> vets = vetRepository.findAllById(vetIds);
+        if (vets.size() != vetIds.size()) {
+            throw new EntityNotFoundException("Some vets not found");
+        }
+        return vets;
+    }
+
+    private List<Vaccination> fetchAndValidateVaccinations(List<UUID> vaccinationsIds) {
+        List<Vaccination> vaccinations = vaccinationRepository.findAllById(vaccinationsIds);
+        if (vaccinations.size() != vaccinationsIds.size()) {
+            throw new EntityNotFoundException("Some vaccinations not found");
+        }
+        return vaccinations;
     }
 }

@@ -792,10 +792,6 @@ databaseChangeLog:
                     nullable: false
 
               - column:
-                  name: name
-                  type: varchar(255)
-
-              - column:
                   name: type
                   type: varchar(255)
 

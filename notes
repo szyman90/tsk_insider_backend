@@ -1,4 +1,3 @@
 - zapytać skąd zamawiamy chipy. Ewentualne dodatkowe zapytanie przy prefixie
-- walidacja rekordów Create Clinic i w Cat
-- zamienić w rekordach na readDTO w parametrach
+- walidacja postal code i ogólnie adresu
 - stworzyć testy i poprawić sprawdzenie istniejacych danych

@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 
 @RestController
@@ -33,7 +33,7 @@ public class VetController {
 
     @PostMapping
     @PreAuthorize("hasRole('MANAGEMENT')")
-    public ResponseEntity<VetReadDTO> createVet(@RequestBody VetCreateDTO vetCreateDTO) {
+    public ResponseEntity<VetReadDTO> createVet(@Valid @RequestBody VetCreateDTO vetCreateDTO) {
         Vet vet = vetService.createVet(vetCreateDTO);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")

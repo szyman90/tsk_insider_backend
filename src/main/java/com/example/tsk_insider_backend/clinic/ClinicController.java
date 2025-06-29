@@ -30,7 +30,7 @@ public class ClinicController {
 
     @PostMapping
     @PreAuthorize("hasRole('MANAGEMENT')")
-    public ResponseEntity<ClinicReadDTO> createClinic(@RequestBody ClinicCreateDTO clinicCreateDTO) {
+    public ResponseEntity<ClinicReadDTO> createClinic(@Valid @RequestBody ClinicCreateDTO clinicCreateDTO) {
         Clinic clinic = clinicService.createClinic(clinicCreateDTO);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")

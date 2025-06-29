@@ -30,8 +30,6 @@ public class Vaccination {
     @ManyToOne(optional = false)
     private Cat cat;
 
-    private String name;
-
     @Enumerated(EnumType.STRING)
     private VaccinationType type;
 
